@@ -1,3 +1,5 @@
+#Code used is based off code provided in lab2 examples
+
 import numpy as np
 import pandas as pd
 from sklearn import datasets, neighbors, linear_model, svm, metrics
@@ -14,7 +16,7 @@ pca = PCA()
 scaler = StandardScaler()
 
 data_train = pd.read_csv("./TrainingDataBinary.csv",header=None)
-data_test = pd.read_csv("./TestingDataBinary.csv")
+data_test = pd.read_csv("./TestingDataBinary.csv",header=None)
 
 x_data = data_train.drop(128, axis=1)
 y_data = data_train[128]
@@ -26,8 +28,13 @@ pipe = Pipeline(steps=[("scaler", scaler), ("pca", pca), ("logistic", logistic)]
 
 log = logistic.fit(x_train, y_train).score(x_test, y_test)
 print(log)
-predictions = logistic.predict(x_test)
+predictions = logistic.predict(data_test)
 print(predictions)
+csv = open("./TestingResultsBinary.csv","w")
+for i in predictions:
+    csv.write(f"{i.item()}\n")
+csv.close()
+
 print (f1_score(y_test, predictions, average='macro'))
 
 #Create a svm Classifier
